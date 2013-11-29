@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import time
 import checker
 
@@ -11,6 +12,8 @@ while True:
     finish = time.time()
     if finish - start == 60:
         updated = False
-        execfile("checker.py")
+        t = checker.main()
+        if type(t) != int:
+            log.append(t)
         
         
