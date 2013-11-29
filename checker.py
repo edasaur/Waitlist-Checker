@@ -12,13 +12,14 @@ while i < len(html)-1:
         waitlist = html[i+9:i+11]
         break
     i+=1
+    
 waitlist = int(waitlist)
 
 if waitlist < 35:
-    popup.showNotification(100000000000000000000000000000,"ALERT: Sign up for Telebears Waitlist now! \n" + "The number of waitlists is now "+str(waitlist)+". The CCN is 22507")
+    popup.showNotification(1<<31-1,"ALERT: Sign up for Telebears Waitlist now! \n" + "The number of waitlists is now "+str(waitlist)+". The CCN is 22507")
 
 execfile("timer.py")
-
+    
 
 
 
