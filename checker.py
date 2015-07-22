@@ -1,63 +1,19 @@
 #!/usr/bin/python
+
 def main():
-    import urllib2, smtplib, time
-    import send, popup
+    from bs4 import BeautifulSoup
+    import time,sys
     
-    url = urllib2.urlopen('http://osoc.berkeley.edu/OSOC/osoc?p_term=SP&p_ccn=22507')
-    html = url.read()
+    term, ccn = sys.argv[1], sys.argv[2]
+    time = time.strftime("%X")
+    r = requests.get('http://osoc.berkeley.edu/OSOC/osoc?p_term=%s&p_ccn=%s' % (term, ccn))
+    soup = BeautifulSoup(r.text,'html.parser')    
     
-    i = 0
-    while i < len(html)-1:
-        if html[i:i+9] == 'Waitlist:':
-            waitlist = html[i+9:i+11]
-            break
-        i+=1
-        
-    waitlist = int(waitlist)
+    nums = soup.find(text=re.compile('^Limit:[0-9]+ Enrolled:[0-9]+ Waitlist:[0-9]+ Avail Seats:[0-9]+')).split(':')
+    for i in range(len(nums)):
+        if ':' in nums[i]:
+            nums[i] = nums[i].split(':')[1]
+
+    limit, enrolled, waitlist, avail = [int(num) for num in nums if num.isdigit()]
     
-    if waitlist < 35:
-        popup.showNotification(100,"ALERT: Sign up for Telebears Waitlist now! \n" + "The number of waitlists is now "+str(waitlist)+". The CCN is 22507")
-        return time.asctime(time.localtime())
-    return 0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#send.sendemail(from_addr    = 'Xtremeaznkid@gmail.com', 
-#               to_addr_list = ['Xtremeaznkid@gmail.com'],
-#               cc_addr_list = ['Xtremeaznkid@gmail.com'], 
-#               subject      = 'Telebears alert', 
-#               message      = 'The waitlist for the class you created an alert for is no longer full. Please register now. (CCN = 22507)', 
-#               login        = '', 
-#               password     = '')
+    
